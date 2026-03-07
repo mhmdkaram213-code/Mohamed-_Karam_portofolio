@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Intersection Observer for scroll animations
     const observerOptions = {
-        threshold: 0.1,
+        threshold: 0.15,
         rootMargin: '0px 0px -50px 0px'
     };
 
@@ -60,31 +60,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Add fade-up animation class to sections and cards
-    const animElements = document.querySelectorAll('.section-title, .about-text, .service-card, .project-card, .skill-tag, .achievement-card');
+    // Elements to reveal on scroll
+    const animElements = document.querySelectorAll('.section-title, .about-text, .service-card, .project-card, .skill-tag, .achievement-card, .edu-item, .contact-info-item, .contact-form-container');
 
-    // Add CSS for the animation dynamically if not present
-    if (!document.getElementById('anim-styles')) {
-        const style = document.createElement('style');
-        style.id = 'anim-styles';
-        style.textContent = `
-            .section-title, .about-text, .service-card, .project-card, .skill-tag, .achievement-card {
-                opacity: 0;
-                transform: translateY(30px);
-                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            }
-            .visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .skill-tag { transition-delay: 0.1s; }
-            .service-card:nth-child(2) { transition-delay: 0.1s; }
-            .service-card:nth-child(3) { transition-delay: 0.2s; }
-        `;
-        document.head.appendChild(style);
-    }
-
-    animElements.forEach(el => observer.observe(el));
+    animElements.forEach((el, index) => {
+        el.classList.add('reveal');
+        // Add staggering effect for grid items
+        if (el.classList.contains('skill-tag') || el.classList.contains('service-card') || el.classList.contains('project-card')) {
+             const delay = (index % 3) * 0.1;
+             el.style.transitionDelay = `${delay}s`;
+        }
+        observer.observe(el);
+    });
 
     // Contact Form Handling with Inline Validation
     const contactForm = document.querySelector('form');
